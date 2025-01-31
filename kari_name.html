@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>週末時計</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wdth,wght@87.5,300&family=Yusei+Magic&display=swap" rel="stylesheet">
+    <style>
+        .weekday
+        {
+            transition: background-color 0.5s ease;
+            background-color: black;
+        }
+        .holiday
+        {
+            background: linear-gradient(90deg, red, orange, yellow);
+        }
+        .default
+        {
+            font-size: 32px;
+            text-align: center;
+            color: white;
+        }
+        #dayOfWeek
+        {
+            font-family: "Yusei Magic";
+        }
+        #timer
+        {
+            font-size: 128px;
+            color: white;
+            font-family: "Fredoka";
+            text-align: center;
+        }
+        #link {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            color:#7fffff;
+            font-size: 16px;
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        #link:hover 
+        {
+            color:#b2ffff;
+        }
+        #descliption
+        {
+            position: fixed;   /* 画面に固定 */
+            bottom: 50px;      /* 下から60pxの位置 */
+            right: 20px;       /* 右から20pxの位置 */
+            color: white;      /* 文字色を白に */
+            font-size: 16px;
+        } 
+    </style>
+</head>
+<body>
+    <div class = default>
+        <br>
+        <p id = "dayOfWeek">週末まで</p>
+        <p> <span id = timer>00:00:00</span>  </p>
+    </div>
+    <p id = "descliption">問題報告の際はここからDM送ってください↓</p>
+    <a id = "link" href="https://x.com/johnny_ssk_714" target="_blank">製作者のTwitter垢</a>
+    <script>
+        function clock()
+        {
+            const today = new Date();
+            const dayOfWeek = today.getDay();
+
+            const totalSecondsInDay = 24 * 60 * 60;
+            let remainingSeconds;
+
+            if (dayOfWeek == 0 || dayOfWeek == 6)
+            {
+                let week
+                if(dayOfWeek == 0)
+                {
+                    week = 0
+                }
+                else
+                {
+                    week = 1
+                }            
+                const currentSeconds = (week * 24 + today.getHours()) * 60 * 60 + today.getMinutes() * 60 + today.getSeconds()
+                remainingSeconds = totalSecondsInDay * 2 - currentSeconds
+
+                document.body.classList.add("holiday")
+                document.body.classList.remove("weekday")
+
+                document.getElementById("dayOfWeek").classList.add("spin");
+                document.getElementById("dayOfWeek").innerHTML = "週末だ！";
+            }
+            else
+            {
+                const currentSeconds = (today.getDay() * 24 + today.getHours()) * 60 * 60 + today.getMinutes() * 60 + today.getSeconds()
+                remainingSeconds = totalSecondsInDay * 6 - currentSeconds
+
+                document.body.classList.add("weekday")
+                document.body.classList.remove("holiday")
+
+                const backgroundColors = 
+                {
+                    1: "#202020",
+                    2: "#404040",
+                    3: "#606060",
+                    4: "#808080",
+                    5: "#a0a0a0"
+                }
+                document.body.style.backgroundColor = backgroundColors[dayOfWeek];
+
+                document.getElementById("dayOfWeek").classList.remove("spin");
+                document.getElementById("dayOfWeek").innerHTML = "週末まで"
+            }
+            const remainingHours = String(Math.floor(remainingSeconds / 3600)).padStart(2, "0");
+            const remainingminute = String(Math.floor((remainingSeconds % 3600) / 60)).padStart(2, "0");
+            remainingSeconds = String(remainingSeconds % 60).padStart(2, "0");
+
+            document.getElementById("timer").innerHTML = " " +remainingHours + ":" + remainingminute + ":" + remainingSeconds + " ";
+        }
+
+        setInterval(clock, 200)
+        clock()
+    </script>
+</body>
+</html>
